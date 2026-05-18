@@ -1,0 +1,15 @@
+{
+  "fileId": "9e83ea4592f4d38d",
+  "originalName": "ml.docx",
+  "ext": "docx",
+  "createdAt": 1779082103238,
+  "originalSize": 15862,
+  "encryptedSize": 15890,
+  "algorithm": "AES-256-GCM",
+  "fileKeyEnc": "/TyKeFwFyrBPMlyaToKwvqQ6O0sTxk/Aikooe5A60/eOsVGsNpE7W4ZgYoQPNLv1pbe1mWWRUfqnVKOS",
+  "hasPassword": false,
+  "passwordHash": null,
+  "expiry": null,
+  "downloaded": false,
+  "oneTime": true
+}
