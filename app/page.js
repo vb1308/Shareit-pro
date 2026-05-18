@@ -6,6 +6,7 @@ import DropZone from '@/components/DropZone';
 import ProgressSteps from '@/components/ProgressSteps';
 import LinkGenerator from '@/components/LinkGenerator';
 import DownloadView from '@/components/DownloadView';
+import QRScanner from '@/components/QRScanner';
 
 function AppContent() {
   const searchParams = useSearchParams();
@@ -21,6 +22,7 @@ function AppContent() {
   const [uploadResult, setUploadResult] = useState(null);
   const [fileId, setFileId] = useState('');
   const [fileExt, setFileExt] = useState('');
+  const [showScanner, setShowScanner] = useState(false);
 
   const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -118,7 +120,14 @@ function AppContent() {
       <main style={{ flex: 1 }}>
         <div className="glass-card">
           {phase === 'idle' && (
-            <DropZone onFileSelected={handleFileSelected} disabled={false} />
+            <div style={{ textAlign: 'center' }}>
+              <DropZone onFileSelected={handleFileSelected} disabled={false} />
+              <div className="mt-2" style={{ marginTop: '1.5rem' }}>
+                <button className="btn btn-secondary" onClick={() => setShowScanner(true)}>
+                  📸 Scan QR to Download
+                </button>
+              </div>
+            </div>
           )}
           {phase === 'uploading' && (
             <ProgressSteps fileName={fileName} fileSize={fileSize} progress={progress} />
@@ -133,6 +142,19 @@ function AppContent() {
             />
           )}
         </div>
+        {showScanner && (
+          <QRScanner 
+            onClose={() => setShowScanner(false)} 
+            onScan={(url) => {
+              if (url.includes('download=')) {
+                setShowScanner(false);
+                window.location.href = url;
+              } else {
+                showToast('Invalid QR Code', 'error');
+              }
+            }} 
+          />
+        )}
       </main>
       <Footer />
     </div>
@@ -144,7 +166,7 @@ function Header() {
     <header className="app-header">
       <div className="logo-row">
         <div className="logo-icon">🔒</div>
-        <span className="logo-text">DropLocker</span>
+        <span className="logo-text">ShareIt Pro</span>
       </div>
       <p className="tagline">Secure Encrypted File Sharing • AES-256-GCM</p>
     </header>
@@ -159,7 +181,7 @@ function Footer() {
           GitHub
         </a>
       </div>
-      <p>© 2025 DropLocker — Encrypted File Sharing</p>
+      <p>© 2025 ShareIt Pro — Encrypted File Sharing</p>
     </footer>
   );
 }

@@ -54,6 +54,8 @@ export async function POST(request) {
       passwordHash: null,
       expiry: null,
       downloaded: false,
+      downloadCount: 0,
+      maxDownloads: 3,
       oneTime: true,
     };
 

@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'DropLocker — Secure Encrypted File Sharing',
+  title: 'ShareIt Pro — Secure Encrypted File Sharing',
   description: 'Upload, encrypt, and share files securely with AES-256-GCM encryption. Password protection, expiry links, and one-time downloads.',
 };
 

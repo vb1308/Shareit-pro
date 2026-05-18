@@ -127,6 +127,12 @@ export default function DownloadView({ fileId, showToast }) {
       {countdown && (
         <div className="expiry-badge">⏱️ {countdown}</div>
       )}
+      
+      {info.maxDownloads > 0 && (
+        <div className="downloads-badge mt-1" style={{ fontSize: '0.85rem', color: '#a5b4fc', textAlign: 'center' }}>
+          🔄 {info.maxDownloads - info.downloadCount} of {info.maxDownloads} downloads remaining
+        </div>
+      )}
 
       <div className="file-preview-card">
         <span className="fp-icon">📄</span>

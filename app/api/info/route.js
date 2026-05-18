@@ -45,6 +45,8 @@ export async function GET(request) {
       hasPassword: !!meta.hasPassword,
       expiry: meta.expiry || null,
       createdAt: meta.createdAt || null,
+      downloadCount: meta.downloadCount || 0,
+      maxDownloads: meta.maxDownloads || 3,
     });
   } catch (error) {
     console.error('Info error:', error);

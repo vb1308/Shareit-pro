@@ -141,16 +141,15 @@ async function serveFile(fileId, meta) {
   headers.set('Content-Length', String(plaintext.length));
   headers.set('Cache-Control', 'no-store');
 
-  // One-time download: delete after serving
-  if (meta.oneTime) {
-    // We cannot easily do fire-and-forget in Next.js Serverless Functions because the process might die,
-    // but we can try to await the deletion before returning the response. However, we want to return the response stream!
-    // Since we are loading the plaintext into memory entirely (not great for large files, but it's what we have),
-    // we can safely delete it from Supabase NOW and still return the plaintext buffer!
+  // Increment download count
+  meta.downloadCount = (meta.downloadCount || 0) + 1;
+  meta.downloaded = true;
+
+  if (meta.downloadCount >= (meta.maxDownloads || 3)) {
+    // Delete file if max downloads reached
     try { await deleteFileAndMeta(fileId, meta.ext); } catch {}
   } else {
-    // Mark as downloaded
-    meta.downloaded = true;
+    // Save updated metadata
     await writeMeta(fileId, meta);
   }
 
