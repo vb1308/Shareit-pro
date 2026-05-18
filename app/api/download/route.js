@@ -26,7 +26,7 @@ export async function GET(request) {
 
     // Check expiry
     if (meta.expiry && Date.now() > meta.expiry) {
-      await deleteFileAndMeta(fileId);
+      await deleteFileAndMeta(fileId, meta.ext);
       return new Response('File expired', { status: 404 });
     }
 
@@ -73,7 +73,7 @@ export async function POST(request) {
 
     // Check expiry
     if (meta.expiry && Date.now() > meta.expiry) {
-      await deleteFileAndMeta(fileId);
+      await deleteFileAndMeta(fileId, meta.ext);
       return NextResponse.json(
         { success: false, error: 'File expired' },
         { status: 404 }
@@ -114,7 +114,7 @@ async function serveFile(fileId, meta) {
   // Read encrypted blob
   const blob = await readFile(fileId, meta.ext);
   if (!blob) {
-    await deleteFileAndMeta(fileId);
+    await deleteFileAndMeta(fileId, meta.ext);
     return new Response('File not found on disk', { status: 404 });
   }
 
@@ -147,7 +147,7 @@ async function serveFile(fileId, meta) {
     // but we can try to await the deletion before returning the response. However, we want to return the response stream!
     // Since we are loading the plaintext into memory entirely (not great for large files, but it's what we have),
     // we can safely delete it from Supabase NOW and still return the plaintext buffer!
-    try { await deleteFileAndMeta(fileId); } catch {}
+    try { await deleteFileAndMeta(fileId, meta.ext); } catch {}
   } else {
     // Mark as downloaded
     meta.downloaded = true;

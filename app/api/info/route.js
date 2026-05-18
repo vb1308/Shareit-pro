@@ -27,7 +27,7 @@ export async function GET(request) {
 
     // Check expiry
     if (meta.expiry && Date.now() > meta.expiry) {
-      await deleteFileAndMeta(fileId);
+      await deleteFileAndMeta(fileId, meta.ext);
       return NextResponse.json(
         { success: false, error: 'This file has expired' },
         { status: 404 }
