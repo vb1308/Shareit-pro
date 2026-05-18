@@ -7,9 +7,11 @@ export default function LinkGenerator({ fileId, extension, uploadResult, onReset
   const [usePassword, setUsePassword] = useState(false);
   const [password, setPassword] = useState('');
   const [shareLink, setShareLink] = useState('');
+  const [directLink, setDirectLink] = useState('');
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [generating, setGenerating] = useState(false);
   const linkInputRef = useRef(null);
+  const directInputRef = useRef(null);
 
   const generateLink = async () => {
     if (usePassword && !password.trim()) {
@@ -31,6 +33,7 @@ export default function LinkGenerator({ fileId, extension, uploadResult, onReset
       const json = await resp.json();
       if (!json.success) throw new Error(json.error || 'Failed');
       setShareLink(json.link);
+      setDirectLink(json.directLink);
       showToast('Secure link generated!', 'success');
 
       // Generate QR code
@@ -58,6 +61,18 @@ export default function LinkGenerator({ fileId, extension, uploadResult, onReset
       }).catch(() => {
         document.execCommand('copy');
         showToast('Link copied!', 'success');
+      });
+    }
+  };
+
+  const copyDirectLink = () => {
+    if (directInputRef.current) {
+      directInputRef.current.select();
+      navigator.clipboard.writeText(directLink).then(() => {
+        showToast('Direct link copied!', 'success');
+      }).catch(() => {
+        document.execCommand('copy');
+        showToast('Direct link copied!', 'success');
       });
     }
   };
@@ -143,9 +158,26 @@ export default function LinkGenerator({ fileId, extension, uploadResult, onReset
               readOnly
             />
             <button className="btn btn-secondary" onClick={copyLink}>
-              📋 Copy
+              📋 Copy Web Link
             </button>
           </div>
+          
+          {!usePassword && directLink && (
+            <div className="link-row" style={{ marginTop: '0.5rem' }}>
+              <input
+                ref={directInputRef}
+                type="text"
+                className="link-input"
+                style={{ fontSize: '0.85rem', opacity: 0.8 }}
+                value={directLink}
+                readOnly
+              />
+              <button className="btn btn-outline" onClick={copyDirectLink}>
+                📋 Copy Direct
+              </button>
+            </div>
+          )}
+
           <p className="link-hint">
             Share this link. It will auto-delete after download{expiry !== '0' ? ' or expiry' : ''}.
           </p>
